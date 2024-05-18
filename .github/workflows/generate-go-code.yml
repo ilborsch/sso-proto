@@ -40,20 +40,7 @@ jobs:
             --go_out=./gen/go/ --go_opt=paths=source_relative \
             --go-grpc_out=./gen/go/ --go-grpc_opt=paths=source_relative
 
-      - name: Check for changes
-        id: check_changes
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "changes"
-          else
-            echo "no changes"
-          fi
-        shell: bash
-
       - name: Commit and Push Generated Code
-        if: steps.check_changes.outputs.stdout == 'changes'
         run: |
           git add gen/go
           git commit -m "Auto-generate Go code"
@@ -62,7 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create and Push Tag
-        if: steps.check_changes.outputs.stdout == 'changes'
         run: |
           TAG_NAME="auto-generated-code-$(date +'%Y%m%d%H%M%S')"
           git tag $TAG_NAME
