@@ -40,6 +40,13 @@ jobs:
             --go_out=./gen/go/ --go_opt=paths=source_relative \
             --go-grpc_out=./gen/go/ --go-grpc_opt=paths=source_relative
 
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+        shell: bash
+
       - name: Commit and Push Generated Code
         run: |
           git add gen/go
